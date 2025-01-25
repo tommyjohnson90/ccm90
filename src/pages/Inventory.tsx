@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, Box, AlertCircle } from "lucide-react";
+import { Package, Eye, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 type Material = Tables<"materials">;
 type Equipment = Tables<"equipment">;
@@ -16,6 +18,7 @@ export default function Inventory() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -45,23 +48,6 @@ export default function Inventory() {
     fetchInventory();
   }, []);
 
-  const renderSpecifications = (specs: Equipment["specs"]) => {
-    if (!specs) return null;
-    
-    return (
-      <div className="grid grid-cols-2 gap-2 mt-2">
-        {Object.entries(specs).map(([key, value]) => (
-          <div key={key} className="text-sm">
-            <span className="font-medium">{key}: </span>
-            <span className="text-gray-600">
-              {value?.toString() || 'N/A'}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   if (error) {
     return (
       <Alert variant="destructive">
@@ -86,27 +72,49 @@ export default function Inventory() {
               </TabsList>
 
               <TabsContent value="equipment">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {equipment.map((item) => (
-                    <Card key={item.id}>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Box className="h-5 w-5" />
-                          {item.model || "Unknown Equipment"}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <p className="text-sm text-gray-500">Type: {item.type}</p>
-                          <p className="text-sm text-gray-500">Status: {item.status}</p>
-                          <p className="text-sm text-gray-500">
-                            Manufacturer: {item.manufacturer}
-                          </p>
-                          {renderSpecifications(item.specs)}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Photo</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="w-[100px]">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {equipment.map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell>
+                            {item.photo_url ? (
+                              <img
+                                src={item.photo_url}
+                                alt={item.model || "Equipment"}
+                                className="h-10 w-10 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+                                <Package className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell className="font-medium">{item.model}</TableCell>
+                          <TableCell>{item.type}</TableCell>
+                          <TableCell>{item.status}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setSelectedEquipment(item)}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               </TabsContent>
 
@@ -114,25 +122,25 @@ export default function Inventory() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {materials.map((material) => (
                     <Card key={material.id}>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
+                      <CardContent className="pt-6">
+                        <div className="flex items-center gap-2">
                           <Package className="h-5 w-5" />
-                          {material.type || "Unknown Material"}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-gray-500">
-                          Quantity: {material.quantity} {material.unit}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Color: {material.color}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Manufacturer: {material.manufacturer}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Price: ${material.price}
-                        </p>
+                          <h3 className="font-semibold">{material.type}</h3>
+                        </div>
+                        <div className="mt-2 space-y-1">
+                          <p className="text-sm text-gray-500">
+                            Quantity: {material.quantity} {material.unit}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Color: {material.color}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Manufacturer: {material.manufacturer}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Price: ${material.price}
+                          </p>
+                        </div>
                       </CardContent>
                     </Card>
                   ))}

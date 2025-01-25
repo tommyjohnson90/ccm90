@@ -193,7 +193,9 @@ export type Database = {
           manufacturer_url: string | null
           model: string | null
           next_maintenance: string | null
+          photo_url: string | null
           specs: Json | null
+          specs_template_id: number | null
           status: string | null
           sub_type: string | null
           type: string | null
@@ -207,7 +209,9 @@ export type Database = {
           manufacturer_url?: string | null
           model?: string | null
           next_maintenance?: string | null
+          photo_url?: string | null
           specs?: Json | null
+          specs_template_id?: number | null
           status?: string | null
           sub_type?: string | null
           type?: string | null
@@ -221,13 +225,23 @@ export type Database = {
           manufacturer_url?: string | null
           model?: string | null
           next_maintenance?: string | null
+          photo_url?: string | null
           specs?: Json | null
+          specs_template_id?: number | null
           status?: string | null
           sub_type?: string | null
           type?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "equipment_specs_template_id_fkey"
+            columns: ["specs_template_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_specifications_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       equipment_library: {
         Row: {
