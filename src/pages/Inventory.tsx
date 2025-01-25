@@ -3,49 +3,46 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, Box } from "lucide-react";
+import { Package, Box, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type Material = Tables<"materials">;
 type EquipmentTemplate = Tables<"equipment_specifications_templates">;
 interface Equipment extends Tables<"equipment"> {
-  specs_template_id: number;
-  specs: {
-    [key: string]: string;
-  };
+  equipment_specifications_template?: EquipmentTemplate;
 }
 
 export default function Inventory() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
-  const [templates, setTemplates] = useState<EquipmentTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchInventory = async () => {
       try {
         const { data: equipmentData, error: equipmentError } = await supabase
           .from("equipment")
-          .select("*");
+          .select(`
+            *,
+            equipment_specifications_template:specs_template_id(*)
+          `);
 
         const { data: materialsData, error: materialsError } = await supabase
           .from("materials")
           .select("*");
 
-        const { data: templatesData, error: templatesError } = await supabase
-          .from("equipment_specifications_templates")
-          .select("*");
-
         if (equipmentError) throw equipmentError;
         if (materialsError) throw materialsError;
-        if (templatesError) throw templatesError;
 
-        setEquipment(equipmentData as Equipment[] || []);
+        setEquipment(equipmentData || []);
         setMaterials(materialsData || []);
-        setTemplates(templatesData || []);
+        setError(null);
       } catch (error) {
         console.error("Error fetching inventory:", error);
+        setError("Failed to load inventory data");
       } finally {
         setIsLoading(false);
       }
@@ -72,6 +69,15 @@ export default function Inventory() {
       </div>
     );
   };
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <SidebarProvider>
@@ -106,7 +112,7 @@ export default function Inventory() {
                           </p>
                           {renderSpecifications(
                             item.specs,
-                            templates.find(t => t.id === item.specs_template_id)
+                            item.equipment_specifications_template
                           )}
                         </div>
                       </CardContent>
@@ -134,6 +140,9 @@ export default function Inventory() {
                         </p>
                         <p className="text-sm text-gray-500">
                           Manufacturer: {material.manufacturer}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Price: ${material.price}
                         </p>
                       </CardContent>
                     </Card>
