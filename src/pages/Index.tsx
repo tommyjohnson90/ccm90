@@ -2,7 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { DesignCard } from "@/components/DesignCard";
 import { Button } from "@/components/ui/button";
-import { UserCircle } from "lucide-react";
+import { UserCircle, Award } from "lucide-react";
 import { AdminAnalytics } from "@/components/AdminAnalytics";
 import { DesignerAnalytics } from "@/components/DesignerAnalytics";
 import { MakerAnalytics } from "@/components/MakerAnalytics";
@@ -44,6 +44,10 @@ const Index = () => {
   const isDesigner = userType === 'designer';
   const isMaker = userType === 'maker';
 
+  // This would typically come from your auth system
+  const userName = "John Doe"; // Placeholder name
+  const communityPoints = 1250; // Placeholder points
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -51,10 +55,19 @@ const Index = () => {
         <main className="flex-1 bg-secondary/20">
           <header className="flex justify-between items-center p-4 bg-white border-b">
             <SidebarTrigger />
-            <Button variant="ghost" className="flex items-center gap-2">
-              <UserCircle className="h-5 w-5" />
-              Sign In
-            </Button>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <UserCircle className="h-5 w-5 text-gray-600" />
+                <span className="text-sm font-medium text-gray-700">{userName}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award className="h-5 w-5 text-amber-500" />
+                <span className="text-sm font-medium text-gray-700">{communityPoints} CP</span>
+              </div>
+              <Button variant="ghost" className="flex items-center gap-2">
+                Sign In
+              </Button>
+            </div>
           </header>
           <div className="container py-8">
             {isAdmin && (
