@@ -198,7 +198,6 @@ export type Database = {
           sub_type: string | null
           type: string | null
           updated_at: string | null
-          specs_template_id: number;
         }
         Insert: {
           created_at?: string | null
@@ -213,7 +212,6 @@ export type Database = {
           sub_type?: string | null
           type?: string | null
           updated_at?: string | null
-          specs_template_id: number;
         }
         Update: {
           created_at?: string | null
@@ -228,7 +226,6 @@ export type Database = {
           sub_type?: string | null
           type?: string | null
           updated_at?: string | null
-          specs_template_id: number;
         }
         Relationships: []
       }
