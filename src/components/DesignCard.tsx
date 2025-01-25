@@ -1,16 +1,16 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Heart, Download, Share2 } from "lucide-react";
+import { Star, ShoppingCart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DesignCardProps {
   title: string;
   author: string;
   image: string;
-  likes: number;
-  downloads: number;
+  rating: number;
+  purchases: number;
 }
 
-export function DesignCard({ title, author, image, likes, downloads }: DesignCardProps) {
+export function DesignCard({ title, author, image, rating, purchases }: DesignCardProps) {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="p-0">
@@ -26,12 +26,12 @@ export function DesignCard({ title, author, image, likes, downloads }: DesignCar
       </CardContent>
       <CardFooter className="flex justify-between p-4 bg-secondary/50">
         <Button variant="ghost" size="sm" className="flex gap-1">
-          <Heart className="h-4 w-4" />
-          <span>{likes}</span>
+          <Star className="h-4 w-4" />
+          <span>{rating.toFixed(1)}</span>
         </Button>
         <Button variant="ghost" size="sm" className="flex gap-1">
-          <Download className="h-4 w-4" />
-          <span>{downloads}</span>
+          <ShoppingCart className="h-4 w-4" />
+          <span>{purchases}</span>
         </Button>
         <Button variant="ghost" size="sm">
           <Share2 className="h-4 w-4" />
