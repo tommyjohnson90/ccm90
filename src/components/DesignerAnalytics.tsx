@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
-// Mock data for designs with metrics
 const mockDesigns = [
   { 
     id: 'all', 
@@ -75,38 +74,40 @@ const mockDesigns = [
   },
 ];
 
-const generateMockData = (duration: string) => {
+const generateMockData = (duration: string, designId: string) => {
+  const multiplier = designId === 'all' ? 1 : 0.4;
+  
   switch (duration) {
     case "7d":
       return [
-        { date: "Mon", value: 100 },
-        { date: "Tue", value: 150 },
-        { date: "Wed", value: 200 },
-        { date: "Thu", value: 180 },
-        { date: "Fri", value: 250 },
-        { date: "Sat", value: 300 },
-        { date: "Sun", value: 280 },
+        { date: "Mon", value: 100 * multiplier },
+        { date: "Tue", value: 150 * multiplier },
+        { date: "Wed", value: 200 * multiplier },
+        { date: "Thu", value: 180 * multiplier },
+        { date: "Fri", value: 250 * multiplier },
+        { date: "Sat", value: 300 * multiplier },
+        { date: "Sun", value: 280 * multiplier },
       ];
     case "30d":
       return [
-        { date: "Week 1", value: 400 },
-        { date: "Week 2", value: 300 },
-        { date: "Week 3", value: 600 },
-        { date: "Week 4", value: 800 },
+        { date: "Week 1", value: 400 * multiplier },
+        { date: "Week 2", value: 300 * multiplier },
+        { date: "Week 3", value: 600 * multiplier },
+        { date: "Week 4", value: 800 * multiplier },
       ];
     case "90d":
       return [
-        { date: "Jan", value: 400 },
-        { date: "Feb", value: 300 },
-        { date: "Mar", value: 600 },
+        { date: "Jan", value: 400 * multiplier },
+        { date: "Feb", value: 300 * multiplier },
+        { date: "Mar", value: 600 * multiplier },
       ];
     default:
       return [
-        { date: "Jan", value: 400 },
-        { date: "Feb", value: 300 },
-        { date: "Mar", value: 600 },
-        { date: "Apr", value: 800 },
-        { date: "May", value: 700 },
+        { date: "Jan", value: 400 * multiplier },
+        { date: "Feb", value: 300 * multiplier },
+        { date: "Mar", value: 600 * multiplier },
+        { date: "Apr", value: 800 * multiplier },
+        { date: "May", value: 700 * multiplier },
       ];
   }
 };
@@ -114,7 +115,7 @@ const generateMockData = (duration: string) => {
 export function DesignerAnalytics() {
   const [duration, setDuration] = useState("30d");
   const [selectedDesign, setSelectedDesign] = useState("all");
-  
+
   const getTimeDescription = (duration: string) => {
     switch (duration) {
       case "7d":
@@ -145,34 +146,36 @@ export function DesignerAnalytics() {
     );
   };
 
+  const selectedDesignData = mockDesigns.find(d => d.id === selectedDesign) || mockDesigns[0];
+  
   const statsCards = [
     {
       title: "Total Royalties",
-      value: "$1,240",
-      description: `+15.3% ${getTimeDescription(duration)}`,
+      value: selectedDesign === 'all' ? "$1,240" : `$${(1240 * (selectedDesignData.totalPurchases / 1193)).toFixed(0)}`,
+      description: `+${selectedDesignData.metrics[duration].value}% ${getTimeDescription(duration)}`,
       icon: DollarSign,
-      chartData: generateMockData(duration),
+      chartData: generateMockData(duration, selectedDesign),
     },
     {
       title: "Design Views",
-      value: "3,456",
-      description: `+22.4% ${getTimeDescription(duration)}`,
+      value: selectedDesign === 'all' ? "3,456" : `${(3456 * (selectedDesignData.totalPurchases / 1193)).toFixed(0)}`,
+      description: `+${selectedDesignData.metrics[duration].value}% ${getTimeDescription(duration)}`,
       icon: Eye,
-      chartData: generateMockData(duration),
+      chartData: generateMockData(duration, selectedDesign),
     },
     {
       title: "Designs Underway",
-      value: "12",
-      description: `+8.1% ${getTimeDescription(duration)}`,
+      value: selectedDesign === 'all' ? "12" : `${Math.max(1, Math.floor(12 * (selectedDesignData.totalPurchases / 1193)))}`,
+      description: `+${selectedDesignData.metrics[duration].value}% ${getTimeDescription(duration)}`,
       icon: Hammer,
-      chartData: generateMockData(duration),
+      chartData: generateMockData(duration, selectedDesign),
     },
     {
       title: "Total Designs",
-      value: "45",
-      description: `+5.7% ${getTimeDescription(duration)}`,
+      value: selectedDesign === 'all' ? "45" : "1",
+      description: `+${selectedDesignData.metrics[duration].value}% ${getTimeDescription(duration)}`,
       icon: FileUp,
-      chartData: generateMockData(duration),
+      chartData: generateMockData(duration, selectedDesign),
     },
   ];
 
@@ -266,4 +269,3 @@ export function DesignerAnalytics() {
       </div>
     </div>
   );
-}
