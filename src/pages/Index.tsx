@@ -4,6 +4,7 @@ import { DesignCard } from "@/components/DesignCard";
 import { Button } from "@/components/ui/button";
 import { UserCircle } from "lucide-react";
 import { AdminAnalytics } from "@/components/AdminAnalytics";
+import { DesignerAnalytics } from "@/components/DesignerAnalytics";
 
 const trendingDesigns = [
   {
@@ -38,6 +39,7 @@ const trendingDesigns = [
 
 // TODO: Replace with actual auth check
 const isAdmin = true;
+const isDesigner = false; // TODO: Replace with actual auth check
 
 const Index = () => {
   return (
@@ -57,6 +59,12 @@ const Index = () => {
               <div className="mb-12">
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard Analytics</h1>
                 <AdminAnalytics />
+              </div>
+            )}
+            {isDesigner && (
+              <div className="mb-12">
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">Designer Dashboard</h1>
+                <DesignerAnalytics />
               </div>
             )}
             <div className="flex justify-between items-center mb-8">
