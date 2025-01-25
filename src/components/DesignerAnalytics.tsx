@@ -18,7 +18,7 @@ import { useState } from "react";
 
 // Mock data for designs
 const mockDesigns = [
-  { id: 'all', name: 'All Designs', popularity: 'Most viewed' },
+  { id: 'all', name: 'All Designs', popularity: '1,193 total purchases' },
   { id: 'design1', name: 'Modular Storage System', popularity: '325 purchases' },
   { id: 'design2', name: 'Smart Home Controller', popularity: '189 purchases' },
   { id: 'design3', name: 'Ergonomic Laptop Stand', popularity: '412 purchases' },
