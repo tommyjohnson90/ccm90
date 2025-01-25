@@ -9,28 +9,44 @@ import { Tables } from "@/integrations/supabase/types";
 
 type Equipment = Tables<"equipment">;
 type Material = Tables<"materials">;
+type EquipmentTemplate = Tables<"equipment_specifications_templates">;
 
 export default function Inventory() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [templates, setTemplates] = useState<EquipmentTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchInventory = async () => {
       try {
+        // Fetch equipment with their templates
         const { data: equipmentData, error: equipmentError } = await supabase
           .from("equipment")
-          .select("*");
+          .select(`
+            *,
+            equipment_specifications_templates (
+              machine_type,
+              sub_type,
+              fields
+            )
+          `);
 
         const { data: materialsData, error: materialsError } = await supabase
           .from("materials")
           .select("*");
 
+        const { data: templatesData, error: templatesError } = await supabase
+          .from("equipment_specifications_templates")
+          .select("*");
+
         if (equipmentError) throw equipmentError;
         if (materialsError) throw materialsError;
+        if (templatesError) throw templatesError;
 
         setEquipment(equipmentData || []);
         setMaterials(materialsData || []);
+        setTemplates(templatesData || []);
       } catch (error) {
         console.error("Error fetching inventory:", error);
       } finally {
@@ -40,6 +56,24 @@ export default function Inventory() {
 
     fetchInventory();
   }, []);
+
+  const renderSpecifications = (specs: any, template?: EquipmentTemplate) => {
+    if (!specs || !template?.fields) return null;
+
+    const templateFields = template.fields.fields || [];
+    return (
+      <div className="grid grid-cols-2 gap-2 mt-2">
+        {templateFields.map((field: any) => (
+          <div key={field.name} className="text-sm">
+            <span className="font-medium">{field.name}: </span>
+            <span className="text-gray-600">
+              {specs[field.name] || 'N/A'} {field.unit_of_measure}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <SidebarProvider>
@@ -66,11 +100,17 @@ export default function Inventory() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-gray-500">Type: {item.type}</p>
-                        <p className="text-sm text-gray-500">Status: {item.status}</p>
-                        <p className="text-sm text-gray-500">
-                          Manufacturer: {item.manufacturer}
-                        </p>
+                        <div className="space-y-2">
+                          <p className="text-sm text-gray-500">Type: {item.type}</p>
+                          <p className="text-sm text-gray-500">Status: {item.status}</p>
+                          <p className="text-sm text-gray-500">
+                            Manufacturer: {item.manufacturer}
+                          </p>
+                          {renderSpecifications(
+                            item.specs,
+                            templates.find(t => t.id === item.specs_template_id)
+                          )}
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
