@@ -60,32 +60,47 @@ const generateMockData = (duration: string) => {
 export function AdminAnalytics() {
   const [duration, setDuration] = useState("30d");
   
+  const getTimeDescription = (duration: string) => {
+    switch (duration) {
+      case "7d":
+        return "from last week";
+      case "30d":
+        return "from last month";
+      case "90d":
+        return "from last quarter";
+      case "1y":
+        return "from last year";
+      default:
+        return "from last month";
+    }
+  };
+
   const statsCards = [
     {
       title: "New Users",
       value: "2,340",
-      description: "+20.1% from last month",
+      description: `+20.1% ${getTimeDescription(duration)}`,
       icon: Users,
       chartData: generateMockData(duration),
     },
     {
       title: "Design Submissions",
       value: "456",
-      description: "+12.3% from last month",
+      description: `+12.3% ${getTimeDescription(duration)}`,
       icon: FileUp,
       chartData: generateMockData(duration),
     },
     {
       title: "Avg. Visit Duration",
       value: "12m 30s",
-      description: "+5.2% from last month",
+      description: `+5.2% ${getTimeDescription(duration)}`,
       icon: Clock,
       chartData: generateMockData(duration),
     },
     {
       title: "Total Orders",
       value: "1,234",
-      description: "+15.7% from last month",
+      description: `+15.7% ${getTimeDescription(duration)}`,
       icon: ShoppingBag,
       chartData: generateMockData(duration),
     },
