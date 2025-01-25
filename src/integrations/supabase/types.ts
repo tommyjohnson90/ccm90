@@ -12,50 +12,87 @@ export type Database = {
       admin_actions: {
         Row: {
           action: string | null
-          admin_id: number | null
+          admin_id: string | null
           id: number
           target_id: number | null
           timestamp: string | null
         }
         Insert: {
           action?: string | null
-          admin_id?: number | null
+          admin_id?: string | null
           id?: number
           target_id?: number | null
           timestamp?: string | null
         }
         Update: {
           action?: string | null
-          admin_id?: number | null
+          admin_id?: string | null
           id?: number
           target_id?: number | null
           timestamp?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "admin_actions_admin_id_fkey"
-            columns: ["admin_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      competitions: {
+        Row: {
+          contract_amount: number | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          end_date: string | null
+          id: number
+          reward_details: string | null
+          reward_type: Database["public"]["Enums"]["competition_reward_enum"]
+          start_date: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          contract_amount?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: number
+          reward_details?: string | null
+          reward_type: Database["public"]["Enums"]["competition_reward_enum"]
+          start_date?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          contract_amount?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: number
+          reward_details?: string | null
+          reward_type?: Database["public"]["Enums"]["competition_reward_enum"]
+          start_date?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       design_fulfillment: {
         Row: {
           compatibility: string | null
+          customer_id: string | null
           design_id: number | null
           id: number
           maker_id: number | null
         }
         Insert: {
           compatibility?: string | null
+          customer_id?: string | null
           design_id?: number | null
           id?: number
           maker_id?: number | null
         }
         Update: {
           compatibility?: string | null
+          customer_id?: string | null
           design_id?: number | null
           id?: number
           maker_id?: number | null
@@ -77,36 +114,74 @@ export type Database = {
           },
         ]
       }
-      design_status_history: {
+      design_ownership_history: {
         Row: {
-          changed_by: number | null
-          design_id: number | null
+          competition_id: number | null
+          design_id: number
           id: number
-          status: string | null
-          timestamp: string | null
+          new_owner_id: string | null
+          old_owner_id: string | null
+          reason: string | null
+          transferred_at: string | null
         }
         Insert: {
-          changed_by?: number | null
-          design_id?: number | null
+          competition_id?: number | null
+          design_id: number
           id?: number
-          status?: string | null
-          timestamp?: string | null
+          new_owner_id?: string | null
+          old_owner_id?: string | null
+          reason?: string | null
+          transferred_at?: string | null
         }
         Update: {
-          changed_by?: number | null
-          design_id?: number | null
+          competition_id?: number | null
+          design_id?: number
           id?: number
-          status?: string | null
-          timestamp?: string | null
+          new_owner_id?: string | null
+          old_owner_id?: string | null
+          reason?: string | null
+          transferred_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "design_status_history_changed_by_fkey"
-            columns: ["changed_by"]
+            foreignKeyName: "fk_ownership_history_competition"
+            columns: ["competition_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "competitions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_ownership_history_design"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "designs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      design_status_history: {
+        Row: {
+          changed_by: string | null
+          design_id: number | null
+          id: number
+          status: Database["public"]["Enums"]["design_status_enum"] | null
+          timestamp: string | null
+        }
+        Insert: {
+          changed_by?: string | null
+          design_id?: number | null
+          id?: number
+          status?: Database["public"]["Enums"]["design_status_enum"] | null
+          timestamp?: string | null
+        }
+        Update: {
+          changed_by?: string | null
+          design_id?: number | null
+          id?: number
+          status?: Database["public"]["Enums"]["design_status_enum"] | null
+          timestamp?: string | null
+        }
+        Relationships: [
           {
             foreignKeyName: "design_status_history_design_id_fkey"
             columns: ["design_id"]
@@ -119,74 +194,80 @@ export type Database = {
       designs: {
         Row: {
           additional_components: Json | null
-          created_at: string | null
-          creator_id: number | null
+          created_at: string
+          creator_id: string | null
+          current_owner_id: string | null
           description: string | null
+          equipment_requirements: Json | null
           external_components: Json | null
           gcode_files: Json | null
           id: number
           images: Json | null
           instructions: string | null
+          material_requirements: Json | null
           model_files: Json | null
           royalties: number | null
-          status: string | null
+          status: Database["public"]["Enums"]["design_status_enum"] | null
           thumbnail_url: string | null
           title: string | null
-          updated_at: string | null
+          updated_at: string
           videos: Json | null
           views: number | null
         }
         Insert: {
           additional_components?: Json | null
-          created_at?: string | null
-          creator_id?: number | null
+          created_at: string
+          creator_id?: string | null
+          current_owner_id?: string | null
           description?: string | null
+          equipment_requirements?: Json | null
           external_components?: Json | null
           gcode_files?: Json | null
           id?: number
           images?: Json | null
           instructions?: string | null
+          material_requirements?: Json | null
           model_files?: Json | null
           royalties?: number | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["design_status_enum"] | null
           thumbnail_url?: string | null
           title?: string | null
-          updated_at?: string | null
+          updated_at: string
           videos?: Json | null
           views?: number | null
         }
         Update: {
           additional_components?: Json | null
-          created_at?: string | null
-          creator_id?: number | null
+          created_at?: string
+          creator_id?: string | null
+          current_owner_id?: string | null
           description?: string | null
+          equipment_requirements?: Json | null
           external_components?: Json | null
           gcode_files?: Json | null
           id?: number
           images?: Json | null
           instructions?: string | null
+          material_requirements?: Json | null
           model_files?: Json | null
           royalties?: number | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["design_status_enum"] | null
           thumbnail_url?: string | null
           title?: string | null
-          updated_at?: string | null
+          updated_at?: string
           videos?: Json | null
           views?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "designs_creator_id_fkey"
-            columns: ["creator_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       equipment: {
         Row: {
-          created_at: string | null
+          build_volume_unit: number
+          build_volume_x: number
+          build_volume_y: number
+          build_volume_z: number
+          created_at: string
+          equipment_library_id: number | null
           id: number
           last_maintenance: string | null
           manufacturer: string | null
@@ -194,15 +275,20 @@ export type Database = {
           model: string | null
           next_maintenance: string | null
           photo_url: string | null
-          specs: Json | null
+          specs: Json
           specs_template_id: number | null
-          status: string | null
-          sub_type: string | null
-          type: string | null
-          updated_at: string | null
+          status: Database["public"]["Enums"]["equipment_status_enum"]
+          sub_type: Database["public"]["Enums"]["equipment_sub_type_enum"]
+          type: Database["public"]["Enums"]["equipment_type_enum"]
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          build_volume_unit: number
+          build_volume_x: number
+          build_volume_y: number
+          build_volume_z: number
+          created_at?: string
+          equipment_library_id?: number | null
           id?: number
           last_maintenance?: string | null
           manufacturer?: string | null
@@ -210,15 +296,20 @@ export type Database = {
           model?: string | null
           next_maintenance?: string | null
           photo_url?: string | null
-          specs?: Json | null
+          specs: Json
           specs_template_id?: number | null
-          status?: string | null
-          sub_type?: string | null
-          type?: string | null
-          updated_at?: string | null
+          status?: Database["public"]["Enums"]["equipment_status_enum"]
+          sub_type: Database["public"]["Enums"]["equipment_sub_type_enum"]
+          type: Database["public"]["Enums"]["equipment_type_enum"]
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          build_volume_unit?: number
+          build_volume_x?: number
+          build_volume_y?: number
+          build_volume_z?: number
+          created_at?: string
+          equipment_library_id?: number | null
           id?: number
           last_maintenance?: string | null
           manufacturer?: string | null
@@ -226,12 +317,12 @@ export type Database = {
           model?: string | null
           next_maintenance?: string | null
           photo_url?: string | null
-          specs?: Json | null
+          specs?: Json
           specs_template_id?: number | null
-          status?: string | null
-          sub_type?: string | null
-          type?: string | null
-          updated_at?: string | null
+          status?: Database["public"]["Enums"]["equipment_status_enum"]
+          sub_type?: Database["public"]["Enums"]["equipment_sub_type_enum"]
+          type?: Database["public"]["Enums"]["equipment_type_enum"]
+          updated_at?: string
         }
         Relationships: [
           {
@@ -241,40 +332,54 @@ export type Database = {
             referencedRelation: "equipment_specifications_templates"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_equipment_build_volume_unit"
+            columns: ["build_volume_unit"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_equipment_library"
+            columns: ["equipment_library_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_library"
+            referencedColumns: ["id"]
+          },
         ]
       }
       equipment_library: {
         Row: {
-          added_by: string | null
-          features: string | null
+          added_by: number | null
+          features: Json | null
           id: number
           last_updated: string | null
           manufacturer: string | null
           model: string | null
-          specifications: string | null
-          supported_materials: string | null
+          specifications: Json | null
+          supported_materials: Json | null
           type: string | null
         }
         Insert: {
-          added_by?: string | null
-          features?: string | null
+          added_by?: number | null
+          features?: Json | null
           id?: number
           last_updated?: string | null
           manufacturer?: string | null
           model?: string | null
-          specifications?: string | null
-          supported_materials?: string | null
+          specifications?: Json | null
+          supported_materials?: Json | null
           type?: string | null
         }
         Update: {
-          added_by?: string | null
-          features?: string | null
+          added_by?: number | null
+          features?: Json | null
           id?: number
           last_updated?: string | null
           manufacturer?: string | null
           model?: string | null
-          specifications?: string | null
-          supported_materials?: string | null
+          specifications?: Json | null
+          supported_materials?: Json | null
           type?: string | null
         }
         Relationships: []
@@ -310,23 +415,23 @@ export type Database = {
         Row: {
           equipment_id: number | null
           id: number
-          timestamp: string | null
+          timestamp: string
           update_description: string | null
-          updated_by: number | null
+          updated_by: string | null
         }
         Insert: {
           equipment_id?: number | null
           id?: number
-          timestamp?: string | null
+          timestamp: string
           update_description?: string | null
-          updated_by?: number | null
+          updated_by?: string | null
         }
         Update: {
           equipment_id?: number | null
           id?: number
-          timestamp?: string | null
+          timestamp?: string
           update_description?: string | null
-          updated_by?: number | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -337,10 +442,10 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "equipment_updates_updated_by_fkey"
-            columns: ["updated_by"]
+            foreignKeyName: "fk_equipment_updates_equipment"
+            columns: ["equipment_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "equipment"
             referencedColumns: ["id"]
           },
         ]
@@ -352,7 +457,7 @@ export type Database = {
           id: number
           location: string | null
           rating: number | null
-          user_id: number | null
+          user_id: string | null
         }
         Insert: {
           availability?: boolean | null
@@ -360,7 +465,7 @@ export type Database = {
           id?: number
           location?: string | null
           rating?: number | null
-          user_id?: number | null
+          user_id?: string | null
         }
         Update: {
           availability?: boolean | null
@@ -368,38 +473,44 @@ export type Database = {
           id?: number
           location?: string | null
           rating?: number | null
-          user_id?: number | null
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "makers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       makers_materials: {
         Row: {
-          experience_level: string | null
+          experience_level: Database["public"]["Enums"]["experience_level_enum"]
           id: number
-          maker_id: number | null
-          material_id: number | null
+          maker_id: number
+          material_id: number
         }
         Insert: {
-          experience_level?: string | null
+          experience_level: Database["public"]["Enums"]["experience_level_enum"]
           id?: number
-          maker_id?: number | null
-          material_id?: number | null
+          maker_id: number
+          material_id: number
         }
         Update: {
-          experience_level?: string | null
+          experience_level?: Database["public"]["Enums"]["experience_level_enum"]
           id?: number
-          maker_id?: number | null
-          material_id?: number | null
+          maker_id?: number
+          material_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_mm_maker"
+            columns: ["maker_id"]
+            isOneToOne: false
+            referencedRelation: "makers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_mm_material"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "makers_materials_maker_id_fkey"
             columns: ["maker_id"]
@@ -418,21 +529,51 @@ export type Database = {
       }
       material_equipment: {
         Row: {
-          equipment_id: number | null
+          compatibility_notes: string | null
+          equipment_id: number
+          experience_level: Database["public"]["Enums"]["experience_level_enum"]
           id: number
-          material_id: number | null
+          maker_id: number
+          material_id: number
         }
         Insert: {
-          equipment_id?: number | null
+          compatibility_notes?: string | null
+          equipment_id: number
+          experience_level: Database["public"]["Enums"]["experience_level_enum"]
           id?: number
-          material_id?: number | null
+          maker_id: number
+          material_id: number
         }
         Update: {
-          equipment_id?: number | null
+          compatibility_notes?: string | null
+          equipment_id?: number
+          experience_level?: Database["public"]["Enums"]["experience_level_enum"]
           id?: number
-          material_id?: number | null
+          maker_id?: number
+          material_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_me_equipment"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_me_maker"
+            columns: ["maker_id"]
+            isOneToOne: false
+            referencedRelation: "makers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_me_material"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "material_equipment_equipment_id_fkey"
             columns: ["equipment_id"]
@@ -453,40 +594,58 @@ export type Database = {
         Row: {
           color: string | null
           id: number
+          image_url: string | null
           manufacturer: string | null
-          price: number | null
-          quantity: number | null
-          reorder_point: number | null
-          type: string | null
-          unit: string | null
-          vendor_name: string | null
-          vendor_url: string | null
+          material_url: string | null
+          price: number
+          quantity: number
+          reorder_point: number
+          type: Database["public"]["Enums"]["material_type_enum"] | null
+          unit_id: number
+          vendor_id: number | null
         }
         Insert: {
           color?: string | null
           id?: number
+          image_url?: string | null
           manufacturer?: string | null
-          price?: number | null
-          quantity?: number | null
-          reorder_point?: number | null
-          type?: string | null
-          unit?: string | null
-          vendor_name?: string | null
-          vendor_url?: string | null
+          material_url?: string | null
+          price?: number
+          quantity?: number
+          reorder_point?: number
+          type?: Database["public"]["Enums"]["material_type_enum"] | null
+          unit_id: number
+          vendor_id?: number | null
         }
         Update: {
           color?: string | null
           id?: number
+          image_url?: string | null
           manufacturer?: string | null
-          price?: number | null
-          quantity?: number | null
-          reorder_point?: number | null
-          type?: string | null
-          unit?: string | null
-          vendor_name?: string | null
-          vendor_url?: string | null
+          material_url?: string | null
+          price?: number
+          quantity?: number
+          reorder_point?: number
+          type?: Database["public"]["Enums"]["material_type_enum"] | null
+          unit_id?: number
+          vendor_id?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_materials_unit"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_materials_vendor"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
@@ -495,7 +654,7 @@ export type Database = {
           message: string | null
           read_status: boolean | null
           type: string | null
-          user_id: number | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -503,7 +662,7 @@ export type Database = {
           message?: string | null
           read_status?: boolean | null
           type?: string | null
-          user_id?: number | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -511,22 +670,14 @@ export type Database = {
           message?: string | null
           read_status?: boolean | null
           type?: string | null
-          user_id?: number | null
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       orders: {
         Row: {
           created_at: string | null
-          customer_id: number | null
+          customer_id: string | null
           customization: string | null
           design_id: number | null
           due_date: string | null
@@ -537,7 +688,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          customer_id?: number | null
+          customer_id?: string | null
           customization?: string | null
           design_id?: number | null
           due_date?: string | null
@@ -548,7 +699,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
-          customer_id?: number | null
+          customer_id?: string | null
           customization?: string | null
           design_id?: number | null
           due_date?: string | null
@@ -558,13 +709,6 @@ export type Database = {
           status?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "orders_customer_id_fkey"
-            columns: ["customer_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "orders_design_id_fkey"
             columns: ["design_id"]
@@ -647,35 +791,48 @@ export type Database = {
           content: string | null
           created_at: string | null
           id: number
-          reference_id: number | null
           review_type: string | null
-          reviewer_id: number | null
+          reviewer_id: string | null
           score: number | null
+          target_design_id: number | null
+          target_designer_id: string | null
+          target_maker_id: number | null
         }
         Insert: {
           content?: string | null
           created_at?: string | null
           id?: number
-          reference_id?: number | null
           review_type?: string | null
-          reviewer_id?: number | null
+          reviewer_id?: string | null
           score?: number | null
+          target_design_id?: number | null
+          target_designer_id?: string | null
+          target_maker_id?: number | null
         }
         Update: {
           content?: string | null
           created_at?: string | null
           id?: number
-          reference_id?: number | null
           review_type?: string | null
-          reviewer_id?: number | null
+          reviewer_id?: string | null
           score?: number | null
+          target_design_id?: number | null
+          target_designer_id?: string | null
+          target_maker_id?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "reviews_reviewer_id_fkey"
-            columns: ["reviewer_id"]
+            foreignKeyName: "reviews_target_design_id_fkey"
+            columns: ["target_design_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "designs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_target_maker_id_fkey"
+            columns: ["target_maker_id"]
+            isOneToOne: false
+            referencedRelation: "makers"
             referencedColumns: ["id"]
           },
         ]
@@ -701,8 +858,10 @@ export type Database = {
       submissions: {
         Row: {
           attachmentURLs: Json | null
+          competition_id: number | null
           created_at: string | null
           description: string | null
+          design_id: number | null
           id: number
           materialCost: number | null
           paymentStatus: string | null
@@ -714,8 +873,10 @@ export type Database = {
         }
         Insert: {
           attachmentURLs?: Json | null
+          competition_id?: number | null
           created_at?: string | null
           description?: string | null
+          design_id?: number | null
           id?: number
           materialCost?: number | null
           paymentStatus?: string | null
@@ -727,8 +888,10 @@ export type Database = {
         }
         Update: {
           attachmentURLs?: Json | null
+          competition_id?: number | null
           created_at?: string | null
           description?: string | null
+          design_id?: number | null
           id?: number
           materialCost?: number | null
           paymentStatus?: string | null
@@ -738,56 +901,70 @@ export type Database = {
           updated_at?: string | null
           userInfo?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_submissions_competition"
+            columns: ["competition_id"]
+            isOneToOne: false
+            referencedRelation: "competitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_submissions_design"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "designs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       units: {
         Row: {
+          conversion_factor: number
           id: number
-          unit_name: string | null
-          unit_symbol: string | null
+          measurement_type: Database["public"]["Enums"]["measurement_type_enum"]
+          unit_name: string
+          unit_symbol: string
         }
         Insert: {
+          conversion_factor?: number
           id?: number
-          unit_name?: string | null
-          unit_symbol?: string | null
+          measurement_type?: Database["public"]["Enums"]["measurement_type_enum"]
+          unit_name: string
+          unit_symbol: string
         }
         Update: {
+          conversion_factor?: number
           id?: number
-          unit_name?: string | null
-          unit_symbol?: string | null
+          measurement_type?: Database["public"]["Enums"]["measurement_type_enum"]
+          unit_name?: string
+          unit_symbol?: string
         }
         Relationships: []
       }
       user_roles: {
         Row: {
-          assigned_by: number | null
+          assigned_by: string | null
           created_at: string | null
           id: number
           role_id: number | null
-          user_id: number | null
+          user_id: string | null
         }
         Insert: {
-          assigned_by?: number | null
+          assigned_by?: string | null
           created_at?: string | null
           id?: number
           role_id?: number | null
-          user_id?: number | null
+          user_id?: string | null
         }
         Update: {
-          assigned_by?: number | null
+          assigned_by?: string | null
           created_at?: string | null
           id?: number
           role_id?: number | null
-          user_id?: number | null
+          user_id?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "user_roles_assigned_by_fkey"
-            columns: ["assigned_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "user_roles_role_id_fkey"
             columns: ["role_id"]
@@ -795,42 +972,29 @@ export type Database = {
             referencedRelation: "roles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "user_roles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
-      users: {
+      vendors: {
         Row: {
           created_at: string | null
-          email: string | null
           id: number
-          phone: string | null
-          role: string | null
           updated_at: string | null
-          username: string | null
+          vendor_name: string
+          vendor_url: string | null
         }
         Insert: {
           created_at?: string | null
-          email?: string | null
           id?: number
-          phone?: string | null
-          role?: string | null
           updated_at?: string | null
-          username?: string | null
+          vendor_name: string
+          vendor_url?: string | null
         }
         Update: {
           created_at?: string | null
-          email?: string | null
           id?: number
-          phone?: string | null
-          role?: string | null
           updated_at?: string | null
-          username?: string | null
+          vendor_name?: string
+          vendor_url?: string | null
         }
         Relationships: []
       }
@@ -839,10 +1003,48 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      show_all_tables_with_columns: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          schema_name: string
+          table_name: string
+          column_name: string
+          data_type: string
+        }[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      competition_reward_enum: "DESIGN_OWNERSHIP" | "CONTRACT"
+      design_status_enum: "DRAFT" | "PUBLISHED" | "ARCHIVED" | "UNDER_REVIEW"
+      equipment_status_enum: "OPERATIONAL" | "MAINTENANCE" | "RETIRED" | "OTHER"
+      equipment_sub_type_enum:
+        | "FDM"
+        | "SLA"
+        | "DLP"
+        | "SLS"
+        | "SLM_DMLS"
+        | "BinderJet"
+        | "MaterialJetting"
+        | "Router"
+        | "MillingMachine"
+        | "Lathe"
+        | "PlasmaCutter"
+        | "LaserCutter"
+        | "Waterjet"
+        | "EDM"
+      equipment_type_enum: "3DPrinters" | "CNCMachines"
+      experience_level_enum: "BEGINNER" | "INTERMEDIATE" | "EXPERT"
+      material_type_enum:
+        | "PLA"
+        | "ABS"
+        | "PETG"
+        | "RESIN"
+        | "STEEL"
+        | "ALUMINUM"
+        | "COPPER"
+        | "OTHER"
+      measurement_type_enum: "MASS" | "VOLUME" | "LENGTH" | "OTHER"
+      review_type_enum: "DESIGN" | "MAKER" | "DESIGNER"
     }
     CompositeTypes: {
       [_ in never]: never
