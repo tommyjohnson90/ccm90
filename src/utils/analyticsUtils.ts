@@ -53,13 +53,21 @@ export const generateMockData = (duration: string, designId: string): ChartDataP
   }
 };
 
-export const getMetricDisplay = (design: Design, duration: string) => {
+export const getMetricDisplay = (design: Design, duration: string, simplified: boolean = false) => {
   const metric = design.metrics[duration as keyof typeof design.metrics];
   const isPositive = metric.value > 0;
   const textColorClass = isPositive ? 'text-green-600' : 'text-red-600';
   const metricType = metric.type.charAt(0).toUpperCase() + metric.type.slice(1);
+  
+  if (simplified) {
+    return {
+      text: `${metricType} ${isPositive ? '+' : ''}${metric.value}%`,
+      colorClass: textColorClass
+    };
+  }
+  
   return {
-    text: `${metricType} ${isPositive ? '+' : ''}${metric.value}%`,
+    text: `${design.totalPurchases} total purchases ${metricType} ${isPositive ? '+' : ''}${metric.value}%`,
     colorClass: textColorClass,
     purchases: design.totalPurchases
   };

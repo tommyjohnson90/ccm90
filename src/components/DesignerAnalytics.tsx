@@ -118,13 +118,8 @@ export function DesignerAnalytics() {
               <SelectItem key={design.id} value={design.id}>
                 <div className="flex justify-between items-center w-full">
                   <span>{design.name}</span>
-                  <span className="text-sm">
-                    <div className="flex items-center gap-1">
-                      <span>{`${design.totalPurchases} total purchases`}</span>
-                      <span className={`ml-2 ${getMetricDisplay(design, duration).colorClass}`}>
-                        {getMetricDisplay(design, duration).text}
-                      </span>
-                    </div>
+                  <span className={getMetricDisplay(design, duration, true).colorClass}>
+                    {getMetricDisplay(design, duration, true).text}
                   </span>
                 </div>
               </SelectItem>
