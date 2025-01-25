@@ -3,13 +3,18 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, Box, Database } from "lucide-react";
+import { Package, Box } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 
-type Equipment = Tables<"equipment">;
 type Material = Tables<"materials">;
 type EquipmentTemplate = Tables<"equipment_specifications_templates">;
+interface Equipment extends Tables<"equipment"> {
+  specs_template_id: number;
+  specs: {
+    [key: string]: string;
+  };
+}
 
 export default function Inventory() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
@@ -20,7 +25,6 @@ export default function Inventory() {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        // Fetch equipment and templates separately
         const { data: equipmentData, error: equipmentError } = await supabase
           .from("equipment")
           .select("*");
@@ -37,7 +41,7 @@ export default function Inventory() {
         if (materialsError) throw materialsError;
         if (templatesError) throw templatesError;
 
-        setEquipment(equipmentData || []);
+        setEquipment(equipmentData as Equipment[] || []);
         setMaterials(materialsData || []);
         setTemplates(templatesData || []);
       } catch (error) {
@@ -50,15 +54,14 @@ export default function Inventory() {
     fetchInventory();
   }, []);
 
-  const renderSpecifications = (specs: any, template?: EquipmentTemplate) => {
+  const renderSpecifications = (specs: Equipment["specs"], template?: EquipmentTemplate) => {
     if (!specs || !template?.fields) return null;
 
-    // Safely access fields from the JSONB data
     const templateFields = (template.fields as any)?.fields || [];
     
     return (
       <div className="grid grid-cols-2 gap-2 mt-2">
-        {templateFields.map((field: any) => (
+        {templateFields.map((field: { name: string; unit_of_measure: string }) => (
           <div key={field.name} className="text-sm">
             <span className="font-medium">{field.name}: </span>
             <span className="text-gray-600">
