@@ -1,13 +1,69 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { DesignCard } from "@/components/DesignCard";
+import { Button } from "@/components/ui/button";
+import { UserCircle } from "lucide-react";
+
+const trendingDesigns = [
+  {
+    title: "Modular Storage System",
+    author: "MakerPro",
+    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
+    likes: 245,
+    downloads: 1200,
+  },
+  {
+    title: "Smart Home Controller",
+    author: "TechCreator",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
+    likes: 189,
+    downloads: 856,
+  },
+  {
+    title: "Ergonomic Laptop Stand",
+    author: "DesignMaster",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    likes: 167,
+    downloads: 723,
+  },
+  {
+    title: "Desktop Organizer",
+    author: "WorkspaceGuru",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
+    likes: 134,
+    downloads: 592,
+  },
+];
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <main className="flex-1 bg-secondary/20">
+          <header className="flex justify-between items-center p-4 bg-white border-b">
+            <SidebarTrigger />
+            <Button variant="ghost" className="flex items-center gap-2">
+              <UserCircle className="h-5 w-5" />
+              Sign In
+            </Button>
+          </header>
+          <div className="container py-8">
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Trending Designs</h1>
+                <p className="text-gray-500">Discover popular community creations</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {trendingDesigns.map((design, index) => (
+                <DesignCard key={index} {...design} />
+              ))}
+            </div>
+          </div>
+        </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
