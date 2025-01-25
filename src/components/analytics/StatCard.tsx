@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
 import { AnalyticsChart } from "./AnalyticsChart";
+import { ChartDataPoint } from "@/types/analytics";
 
 interface StatCardProps {
   stat: {
@@ -8,7 +9,7 @@ interface StatCardProps {
     value: string;
     description: string;
     icon: LucideIcon;
-    chartData: number[];
+    chartData: ChartDataPoint[];
   };
 }
 

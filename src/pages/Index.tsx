@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { UserCircle } from "lucide-react";
 import { AdminAnalytics } from "@/components/AdminAnalytics";
 import { DesignerAnalytics } from "@/components/DesignerAnalytics";
+import { MakerAnalytics } from "@/components/MakerAnalytics";
 
 const trendingDesigns = [
   {
@@ -41,6 +42,7 @@ const Index = () => {
   const userType = localStorage.getItem('userType') || 'customer';
   const isAdmin = userType === 'admin';
   const isDesigner = userType === 'designer';
+  const isMaker = userType === 'maker';
 
   return (
     <SidebarProvider>
@@ -65,6 +67,12 @@ const Index = () => {
               <div className="mb-12">
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Designer Dashboard</h1>
                 <DesignerAnalytics />
+              </div>
+            )}
+            {isMaker && (
+              <div className="mb-12">
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">Maker Dashboard</h1>
+                <MakerAnalytics />
               </div>
             )}
             <div className="flex justify-between items-center mb-8">
