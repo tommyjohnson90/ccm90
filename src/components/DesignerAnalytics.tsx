@@ -116,8 +116,8 @@ export function DesignerAnalytics() {
           <SelectContent>
             {mockDesigns.map((design) => (
               <SelectItem key={design.id} value={design.id}>
-                <div className="flex justify-between items-center w-full">
-                  <span>{design.name}</span>
+                <div className="flex justify-between items-center w-full min-w-[300px]">
+                  <span className="truncate mr-4">{design.name}</span>
                   <span className={getMetricDisplay(design, duration, true).colorClass}>
                     {getMetricDisplay(design, duration, true).text}
                   </span>

@@ -1,30 +1,29 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { StatCard as StatCardType } from "@/types/analytics";
+import { Card } from "@/components/ui/card";
+import { LucideIcon } from "lucide-react";
 import { AnalyticsChart } from "./AnalyticsChart";
 
 interface StatCardProps {
-  stat: StatCardType;
+  stat: {
+    title: string;
+    value: string;
+    description: string;
+    icon: LucideIcon;
+    chartData: number[];
+  };
 }
 
 export function StatCard({ stat }: StatCardProps) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-        <stat.icon className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{stat.value}</div>
-        <p className="text-xs text-muted-foreground">{stat.description}</p>
-        <div className="h-[80px] mt-4">
-          <AnalyticsChart data={stat.chartData} />
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-sm font-medium text-gray-600">{stat.title}</p>
+          <h4 className="text-2xl font-bold">{stat.value}</h4>
+          <p className="text-sm text-gray-600">{stat.description}</p>
         </div>
-      </CardContent>
+        <stat.icon className="h-8 w-8 text-gray-400" />
+      </div>
+      <AnalyticsChart data={stat.chartData} />
     </Card>
   );
 }
