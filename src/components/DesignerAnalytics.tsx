@@ -269,3 +269,4 @@ export function DesignerAnalytics() {
       </div>
     </div>
   );
+}
