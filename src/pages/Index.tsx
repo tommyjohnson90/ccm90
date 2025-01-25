@@ -37,11 +37,11 @@ const trendingDesigns = [
   },
 ];
 
-// TODO: Replace with actual auth check
-const isAdmin = true;
-const isDesigner = false; // TODO: Replace with actual auth check
-
 const Index = () => {
+  const userType = localStorage.getItem('userType') || 'customer';
+  const isAdmin = userType === 'admin';
+  const isDesigner = userType === 'designer';
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
