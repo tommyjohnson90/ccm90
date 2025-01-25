@@ -184,21 +184,23 @@ export type Database = {
           },
         ]
       }
-      equipment: {
-        Row: {
-          created_at: string | null
-          id: number
-          last_maintenance: string | null
-          manufacturer: string | null
-          manufacturer_url: string | null
-          model: string | null
-          next_maintenance: string | null
-          specs: Json | null
-          status: string | null
-          sub_type: string | null
-          type: string | null
-          updated_at: string | null
-        }
+
+equipment: {
+  Row: {
+    id: number
+    type: string | null
+    sub_type: string | null
+    manufacturer: string | null
+    manufacturer_url: string | null
+    model: string | null
+    status: string | null
+    last_maintenance: string | null
+    next_maintenance: string | null
+    specs: Json | null
+    created_at: string | null
+    updated_at: string | null
+    specs_template_id: number | null
+  }
         Insert: {
           created_at?: string | null
           id?: number
@@ -228,7 +230,8 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
-      }
+}
+
       equipment_library: {
         Row: {
           added_by: string | null
@@ -932,3 +935,4 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+

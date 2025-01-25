@@ -20,17 +20,10 @@ export default function Inventory() {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        // Fetch equipment with their templates
+        // Fetch equipment and templates separately
         const { data: equipmentData, error: equipmentError } = await supabase
           .from("equipment")
-          .select(`
-            *,
-            equipment_specifications_templates (
-              machine_type,
-              sub_type,
-              fields
-            )
-          `);
+          .select("*");
 
         const { data: materialsData, error: materialsError } = await supabase
           .from("materials")
@@ -60,7 +53,9 @@ export default function Inventory() {
   const renderSpecifications = (specs: any, template?: EquipmentTemplate) => {
     if (!specs || !template?.fields) return null;
 
-    const templateFields = template.fields.fields || [];
+    // Safely access fields from the JSONB data
+    const templateFields = (template.fields as any)?.fields || [];
+    
     return (
       <div className="grid grid-cols-2 gap-2 mt-2">
         {templateFields.map((field: any) => (
