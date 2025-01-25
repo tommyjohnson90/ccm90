@@ -21,7 +21,9 @@ export function StatCard({ stat }: StatCardProps) {
       <CardContent>
         <div className="text-2xl font-bold">{stat.value}</div>
         <p className="text-xs text-muted-foreground">{stat.description}</p>
-        <AnalyticsChart data={stat.chartData} />
+        <div className="h-[80px] mt-4">
+          <AnalyticsChart data={stat.chartData} />
+        </div>
       </CardContent>
     </Card>
   );

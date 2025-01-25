@@ -11,16 +11,16 @@ import { StatCard } from "./analytics/StatCard";
 import { generateMockData, getTimeDescription, getMetricDisplay } from "@/utils/analyticsUtils";
 import { Design } from "@/types/analytics";
 
-const mockDesigns = [
+const mockDesigns: Design[] = [
   { 
     id: 'all', 
     name: 'All Designs', 
     totalPurchases: 1193,
     metrics: {
-      '7d': { type: 'revenue', value: 15.3 },
-      '30d': { type: 'views', value: 22.4 },
-      '90d': { type: 'revenue', value: 18.7 },
-      '1y': { type: 'purchases', value: 25.1 }
+      '7d': { type: 'revenue' as const, value: 15.3 },
+      '30d': { type: 'views' as const, value: 22.4 },
+      '90d': { type: 'revenue' as const, value: 18.7 },
+      '1y': { type: 'purchases' as const, value: 25.1 }
     }
   },
   { 
@@ -28,10 +28,10 @@ const mockDesigns = [
     name: 'Modular Storage System', 
     totalPurchases: 325,
     metrics: {
-      '7d': { type: 'views', value: -5.2 },
-      '30d': { type: 'revenue', value: 12.4 },
-      '90d': { type: 'purchases', value: 8.7 },
-      '1y': { type: 'revenue', value: 15.1 }
+      '7d': { type: 'views' as const, value: -5.2 },
+      '30d': { type: 'revenue' as const, value: 12.4 },
+      '90d': { type: 'purchases' as const, value: 8.7 },
+      '1y': { type: 'revenue' as const, value: 15.1 }
     }
   },
   { 
@@ -39,10 +39,10 @@ const mockDesigns = [
     name: 'Smart Home Controller', 
     totalPurchases: 189,
     metrics: {
-      '7d': { type: 'revenue', value: 8.3 },
-      '30d': { type: 'views', value: -3.4 },
-      '90d': { type: 'purchases', value: 10.7 },
-      '1y': { type: 'views', value: 18.1 }
+      '7d': { type: 'revenue' as const, value: 8.3 },
+      '30d': { type: 'views' as const, value: -3.4 },
+      '90d': { type: 'purchases' as const, value: 10.7 },
+      '1y': { type: 'views' as const, value: 18.1 }
     }
   },
   { 
@@ -50,10 +50,10 @@ const mockDesigns = [
     name: 'Ergonomic Laptop Stand', 
     totalPurchases: 412,
     metrics: {
-      '7d': { type: 'purchases', value: 12.3 },
-      '30d': { type: 'revenue', value: 15.4 },
-      '90d': { type: 'views', value: -2.7 },
-      '1y': { type: 'revenue', value: 20.1 }
+      '7d': { type: 'purchases' as const, value: 12.3 },
+      '30d': { type: 'revenue' as const, value: 15.4 },
+      '90d': { type: 'views' as const, value: -2.7 },
+      '1y': { type: 'revenue' as const, value: 20.1 }
     }
   },
   { 
@@ -61,10 +61,10 @@ const mockDesigns = [
     name: 'Desktop Organizer', 
     totalPurchases: 267,
     metrics: {
-      '7d': { type: 'views', value: 9.3 },
-      '30d': { type: 'purchases', value: -4.4 },
-      '90d': { type: 'revenue', value: 11.7 },
-      '1y': { type: 'purchases', value: 16.1 }
+      '7d': { type: 'views' as const, value: 9.3 },
+      '30d': { type: 'purchases' as const, value: -4.4 },
+      '90d': { type: 'revenue' as const, value: 11.7 },
+      '1y': { type: 'purchases' as const, value: 16.1 }
     }
   },
 ];
