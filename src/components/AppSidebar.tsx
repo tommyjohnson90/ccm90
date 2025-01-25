@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Settings, User, PlusSquare, Search } from "lucide-react";
+import { Home, TrendingUp, Settings, User, PlusSquare, Search, Package } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,16 +10,27 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const menuItems = [
-  { title: "Dashboard", icon: Home, url: "/" },
-  { title: "Trending", icon: TrendingUp, url: "/trending" },
-  { title: "Create", icon: PlusSquare, url: "/create" },
-  { title: "Explore", icon: Search, url: "/explore" },
-  { title: "Profile", icon: User, url: "/profile" },
-  { title: "Settings", icon: Settings, url: "/settings" },
-];
+const getMenuItems = (userType: string) => {
+  const baseItems = [
+    { title: "Dashboard", icon: Home, url: "/" },
+    { title: "Trending", icon: TrendingUp, url: "/trending" },
+    { title: "Create", icon: PlusSquare, url: "/create" },
+    { title: "Explore", icon: Search, url: "/explore" },
+    { title: "Profile", icon: User, url: "/profile" },
+    { title: "Settings", icon: Settings, url: "/settings" },
+  ];
+
+  if (userType === 'maker') {
+    baseItems.splice(3, 0, { title: "Inventory", icon: Package, url: "/inventory" });
+  }
+
+  return baseItems;
+};
 
 export function AppSidebar() {
+  const userType = localStorage.getItem('userType') || 'customer';
+  const menuItems = getMenuItems(userType);
+
   return (
     <Sidebar>
       <SidebarContent>
