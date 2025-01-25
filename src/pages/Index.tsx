@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { DesignCard } from "@/components/DesignCard";
 import { Button } from "@/components/ui/button";
 import { UserCircle } from "lucide-react";
+import { AdminAnalytics } from "@/components/AdminAnalytics";
 
 const trendingDesigns = [
   {
@@ -35,6 +36,9 @@ const trendingDesigns = [
   },
 ];
 
+// TODO: Replace with actual auth check
+const isAdmin = true;
+
 const Index = () => {
   return (
     <SidebarProvider>
@@ -49,6 +53,12 @@ const Index = () => {
             </Button>
           </header>
           <div className="container py-8">
+            {isAdmin && (
+              <div className="mb-12">
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard Analytics</h1>
+                <AdminAnalytics />
+              </div>
+            )}
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Trending Designs</h1>
