@@ -16,6 +16,15 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
+// Mock data for designs
+const mockDesigns = [
+  { id: 'all', name: 'All Designs', popularity: 'Most viewed' },
+  { id: 'design1', name: 'Modular Storage System', popularity: '325 purchases' },
+  { id: 'design2', name: 'Smart Home Controller', popularity: '189 purchases' },
+  { id: 'design3', name: 'Ergonomic Laptop Stand', popularity: '412 purchases' },
+  { id: 'design4', name: 'Desktop Organizer', popularity: '267 purchases' },
+];
+
 const generateMockData = (duration: string) => {
   switch (duration) {
     case "7d":
@@ -54,6 +63,7 @@ const generateMockData = (duration: string) => {
 
 export function DesignerAnalytics() {
   const [duration, setDuration] = useState("30d");
+  const [selectedDesign, setSelectedDesign] = useState("all");
   
   const getTimeDescription = (duration: string) => {
     switch (duration) {
@@ -103,7 +113,24 @@ export function DesignerAnalytics() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-4">
+        <Select value={selectedDesign} onValueChange={setSelectedDesign}>
+          <SelectTrigger className="w-[250px]">
+            <SelectValue placeholder="Select design" />
+          </SelectTrigger>
+          <SelectContent>
+            {mockDesigns.map((design) => (
+              <SelectItem key={design.id} value={design.id}>
+                <div className="flex justify-between items-center w-full">
+                  <span>{design.name}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {design.popularity}
+                  </span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select value={duration} onValueChange={setDuration}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select duration" />
