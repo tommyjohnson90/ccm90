@@ -37,7 +37,13 @@ export default function Inventory() {
         if (equipmentError) throw equipmentError;
         if (materialsError) throw materialsError;
 
-        setEquipment(equipmentData as Equipment[] || []);
+        // Use type assertion after validating the data structure
+        const validEquipmentData = (equipmentData || []).map(item => ({
+          ...item,
+          equipment_specifications_template: item.equipment_specifications_template || null
+        })) as Equipment[];
+
+        setEquipment(validEquipmentData);
         setMaterials(materialsData || []);
         setError(null);
       } catch (error) {
@@ -51,7 +57,7 @@ export default function Inventory() {
     fetchInventory();
   }, []);
 
-  const renderSpecifications = (specs: Equipment["specs"], template?: EquipmentTemplate | null) => {
+  const renderSpecifications = (specs: Equipment["specs"], template: EquipmentTemplate | null) => {
     if (!specs || !template?.fields) return null;
 
     const templateFields = (template.fields as any)?.fields || [];
