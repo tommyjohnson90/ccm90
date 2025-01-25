@@ -12,7 +12,7 @@ interface DesignCardProps {
 
 export function DesignCard({ title, author, image, rating, purchases }: DesignCardProps) {
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-lg">
+    <Card className="overflow-hidden transition-all hover:shadow-lg h-full flex flex-col">
       <CardHeader className="p-0">
         <img
           src={image}
@@ -20,7 +20,7 @@ export function DesignCard({ title, author, image, rating, purchases }: DesignCa
           className="h-48 w-full object-cover"
         />
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex-grow">
         <h3 className="font-semibold text-lg">{title}</h3>
         <p className="text-sm text-gray-500">by {author}</p>
       </CardContent>
