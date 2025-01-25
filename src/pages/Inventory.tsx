@@ -10,9 +10,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type Material = Tables<"materials">;
 type EquipmentTemplate = Tables<"equipment_specifications_templates">;
-interface Equipment extends Tables<"equipment"> {
-  equipment_specifications_template?: EquipmentTemplate;
-}
+type Equipment = Tables<"equipment"> & {
+  equipment_specifications_template: EquipmentTemplate | null;
+};
 
 export default function Inventory() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
@@ -37,7 +37,7 @@ export default function Inventory() {
         if (equipmentError) throw equipmentError;
         if (materialsError) throw materialsError;
 
-        setEquipment(equipmentData || []);
+        setEquipment(equipmentData as Equipment[] || []);
         setMaterials(materialsData || []);
         setError(null);
       } catch (error) {
@@ -51,7 +51,7 @@ export default function Inventory() {
     fetchInventory();
   }, []);
 
-  const renderSpecifications = (specs: Equipment["specs"], template?: EquipmentTemplate) => {
+  const renderSpecifications = (specs: Equipment["specs"], template?: EquipmentTemplate | null) => {
     if (!specs || !template?.fields) return null;
 
     const templateFields = (template.fields as any)?.fields || [];
@@ -62,7 +62,7 @@ export default function Inventory() {
           <div key={field.name} className="text-sm">
             <span className="font-medium">{field.name}: </span>
             <span className="text-gray-600">
-              {specs[field.name] || 'N/A'} {field.unit_of_measure}
+              {(specs as any)[field.name] || 'N/A'} {field.unit_of_measure}
             </span>
           </div>
         ))}
