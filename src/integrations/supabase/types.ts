@@ -265,6 +265,33 @@ export type Database = {
         }
         Relationships: []
       }
+      equipment_specifications_templates: {
+        Row: {
+          created_at: string | null
+          fields: Json
+          id: number
+          machine_type: string
+          sub_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          fields: Json
+          id?: number
+          machine_type: string
+          sub_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          fields?: Json
+          id?: number
+          machine_type?: string
+          sub_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       equipment_updates: {
         Row: {
           equipment_id: number | null
