@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Users, FileUp, Clock, ShoppingBag } from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer } from "recharts";
+import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const mockData = [
   { date: "Jan", value: 400 },
@@ -75,15 +75,22 @@ export function AdminAnalytics() {
                     bottom: 0,
                   }}
                 >
-                  <ChartTooltip
+                  <Tooltip
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         return (
-                          <ChartTooltipContent>
-                            <div className="flex flex-col gap-2">
-                              <p className="text-sm">{payload[0].value}</p>
+                          <div className="rounded-lg border bg-background p-2 shadow-sm">
+                            <div className="grid gap-2">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-sm text-muted-foreground">
+                                  Value
+                                </span>
+                                <span className="text-sm font-medium">
+                                  {payload[0].value}
+                                </span>
+                              </div>
                             </div>
-                          </ChartTooltipContent>
+                          </div>
                         );
                       }
                       return null;
