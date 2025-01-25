@@ -9,10 +9,7 @@ import { Tables } from "@/integrations/supabase/types";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type Material = Tables<"materials">;
-type EquipmentTemplate = Tables<"equipment_specifications_templates">;
-type Equipment = Tables<"equipment"> & {
-  equipment_specifications_template: EquipmentTemplate | null;
-};
+type Equipment = Tables<"equipment">;
 
 export default function Inventory() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
@@ -25,10 +22,7 @@ export default function Inventory() {
       try {
         const { data: equipmentData, error: equipmentError } = await supabase
           .from("equipment")
-          .select(`
-            *,
-            equipment_specifications_template:specs_template_id(*)
-          `);
+          .select("*");
 
         const { data: materialsData, error: materialsError } = await supabase
           .from("materials")
@@ -37,13 +31,7 @@ export default function Inventory() {
         if (equipmentError) throw equipmentError;
         if (materialsError) throw materialsError;
 
-        // Use type assertion after validating the data structure
-        const validEquipmentData = (equipmentData || []).map(item => ({
-          ...item,
-          equipment_specifications_template: item.equipment_specifications_template || null
-        })) as Equipment[];
-
-        setEquipment(validEquipmentData);
+        setEquipment(equipmentData || []);
         setMaterials(materialsData || []);
         setError(null);
       } catch (error) {
@@ -57,18 +45,16 @@ export default function Inventory() {
     fetchInventory();
   }, []);
 
-  const renderSpecifications = (specs: Equipment["specs"], template: EquipmentTemplate | null) => {
-    if (!specs || !template?.fields) return null;
-
-    const templateFields = (template.fields as any)?.fields || [];
+  const renderSpecifications = (specs: Equipment["specs"]) => {
+    if (!specs) return null;
     
     return (
       <div className="grid grid-cols-2 gap-2 mt-2">
-        {templateFields.map((field: { name: string; unit_of_measure: string }) => (
-          <div key={field.name} className="text-sm">
-            <span className="font-medium">{field.name}: </span>
+        {Object.entries(specs).map(([key, value]) => (
+          <div key={key} className="text-sm">
+            <span className="font-medium">{key}: </span>
             <span className="text-gray-600">
-              {(specs as any)[field.name] || 'N/A'} {field.unit_of_measure}
+              {value?.toString() || 'N/A'}
             </span>
           </div>
         ))}
@@ -116,10 +102,7 @@ export default function Inventory() {
                           <p className="text-sm text-gray-500">
                             Manufacturer: {item.manufacturer}
                           </p>
-                          {renderSpecifications(
-                            item.specs,
-                            item.equipment_specifications_template
-                          )}
+                          {renderSpecifications(item.specs)}
                         </div>
                       </CardContent>
                     </Card>
