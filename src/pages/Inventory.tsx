@@ -12,10 +12,12 @@ import { Button } from "@/components/ui/button";
 
 type Material = Tables<"materials">;
 type Equipment = Tables<"equipment">;
+type Unit = Tables<"units">;
 
 export default function Inventory() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [units, setUnits] = useState<Record<number, Unit>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
@@ -31,11 +33,23 @@ export default function Inventory() {
           .from("materials")
           .select("*");
 
+        const { data: unitsData, error: unitsError } = await supabase
+          .from("units")
+          .select("*");
+
         if (equipmentError) throw equipmentError;
         if (materialsError) throw materialsError;
+        if (unitsError) throw unitsError;
+
+        // Create a map of unit_id to unit for easy lookup
+        const unitsMap = (unitsData || []).reduce((acc, unit) => {
+          acc[unit.id] = unit;
+          return acc;
+        }, {} as Record<number, Unit>);
 
         setEquipment(equipmentData || []);
         setMaterials(materialsData || []);
+        setUnits(unitsMap);
         setError(null);
       } catch (error) {
         console.error("Error fetching inventory:", error);
@@ -129,7 +143,7 @@ export default function Inventory() {
                         </div>
                         <div className="mt-2 space-y-1">
                           <p className="text-sm text-gray-500">
-                            Quantity: {material.quantity} {material.unit}
+                            Quantity: {material.quantity} {units[material.unit_id]?.unit_symbol || ''}
                           </p>
                           <p className="text-sm text-gray-500">
                             Color: {material.color}
