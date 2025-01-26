@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Eye, Package, Plus } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
+import { EquipmentLibraryDialog } from "./EquipmentLibraryDialog";
+import { useInventoryData } from "@/hooks/use-inventory-data";
 
 type Equipment = Tables<"equipment">;
 
@@ -11,11 +14,19 @@ interface EquipmentTableProps {
 }
 
 export function EquipmentTable({ equipment, onViewEquipment }: EquipmentTableProps) {
+  const [showLibrary, setShowLibrary] = useState(false);
+  const { equipmentLibrary } = useInventoryData();
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">Your Equipment</h2>
-        <Button variant="outline" size="sm" className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="flex items-center gap-2"
+          onClick={() => setShowLibrary(true)}
+        >
           <Plus className="h-4 w-4" />
           Equipment Library
         </Button>
@@ -64,6 +75,12 @@ export function EquipmentTable({ equipment, onViewEquipment }: EquipmentTablePro
           </TableBody>
         </Table>
       </div>
+
+      <EquipmentLibraryDialog
+        open={showLibrary}
+        onOpenChange={setShowLibrary}
+        equipmentLibrary={equipmentLibrary || []}
+      />
     </div>
   );
 }
