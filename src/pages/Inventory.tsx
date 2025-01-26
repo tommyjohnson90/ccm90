@@ -8,13 +8,16 @@ import { Tables } from "@/integrations/supabase/types";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { EquipmentTable } from "@/components/inventory/EquipmentTable";
 import { MaterialsGrid } from "@/components/inventory/MaterialsGrid";
+import { EquipmentLibraryTable } from "@/components/inventory/EquipmentLibraryTable";
 
 type Material = Tables<"materials">;
 type Equipment = Tables<"equipment">;
+type EquipmentLibrary = Tables<"equipment_library">;
 type Unit = Tables<"units">;
 
 export default function Inventory() {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const [equipmentLibrary, setEquipmentLibrary] = useState<EquipmentLibrary[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
   const [units, setUnits] = useState<Record<number, Unit>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -28,6 +31,10 @@ export default function Inventory() {
           .from("equipment")
           .select("*");
 
+        const { data: equipmentLibraryData, error: equipmentLibraryError } = await supabase
+          .from("equipment_library")
+          .select("*");
+
         const { data: materialsData, error: materialsError } = await supabase
           .from("materials")
           .select("*");
@@ -37,6 +44,7 @@ export default function Inventory() {
           .select("*");
 
         if (equipmentError) throw equipmentError;
+        if (equipmentLibraryError) throw equipmentLibraryError;
         if (materialsError) throw materialsError;
         if (unitsError) throw unitsError;
 
@@ -46,6 +54,7 @@ export default function Inventory() {
         }, {} as Record<number, Unit>);
 
         setEquipment(equipmentData || []);
+        setEquipmentLibrary(equipmentLibraryData || []);
         setMaterials(materialsData || []);
         setUnits(unitsMap);
         setError(null);
@@ -80,6 +89,7 @@ export default function Inventory() {
             <Tabs defaultValue="equipment" className="w-full">
               <TabsList>
                 <TabsTrigger value="equipment">Equipment</TabsTrigger>
+                <TabsTrigger value="equipment-library">Equipment Library</TabsTrigger>
                 <TabsTrigger value="materials">Materials</TabsTrigger>
               </TabsList>
 
@@ -87,6 +97,12 @@ export default function Inventory() {
                 <EquipmentTable 
                   equipment={equipment}
                   onViewEquipment={setSelectedEquipment}
+                />
+              </TabsContent>
+
+              <TabsContent value="equipment-library">
+                <EquipmentLibraryTable 
+                  equipmentLibrary={equipmentLibrary}
                 />
               </TabsContent>
 
