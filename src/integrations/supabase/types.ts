@@ -194,11 +194,13 @@ export type Database = {
       designs: {
         Row: {
           additional_components: Json | null
+          average_machine_time: number
           created_at: string
           creator_id: string | null
           current_owner_id: string | null
           description: string | null
           equipment_requirements: Json | null
+          estimated_machine_time: number
           external_components: Json | null
           gcode_files: Json | null
           id: number
@@ -216,11 +218,13 @@ export type Database = {
         }
         Insert: {
           additional_components?: Json | null
+          average_machine_time?: number
           created_at: string
           creator_id?: string | null
           current_owner_id?: string | null
           description?: string | null
           equipment_requirements?: Json | null
+          estimated_machine_time: number
           external_components?: Json | null
           gcode_files?: Json | null
           id?: number
@@ -238,11 +242,13 @@ export type Database = {
         }
         Update: {
           additional_components?: Json | null
+          average_machine_time?: number
           created_at?: string
           creator_id?: string | null
           current_owner_id?: string | null
           description?: string | null
           equipment_requirements?: Json | null
+          estimated_machine_time?: number
           external_components?: Json | null
           gcode_files?: Json | null
           id?: number
@@ -267,7 +273,9 @@ export type Database = {
           build_volume_y: number
           build_volume_z: number
           created_at: string
+          designs_used: Json
           equipment_library_id: number | null
+          hours_used: number
           id: number
           last_maintenance: string | null
           manufacturer: string | null
@@ -275,6 +283,7 @@ export type Database = {
           model: string | null
           next_maintenance: string | null
           photo_url: string | null
+          purchase_price: number
           specs: Json
           specs_template_id: number | null
           status: Database["public"]["Enums"]["equipment_status_enum"]
@@ -288,7 +297,9 @@ export type Database = {
           build_volume_y: number
           build_volume_z: number
           created_at?: string
+          designs_used?: Json
           equipment_library_id?: number | null
+          hours_used?: number
           id?: number
           last_maintenance?: string | null
           manufacturer?: string | null
@@ -296,6 +307,7 @@ export type Database = {
           model?: string | null
           next_maintenance?: string | null
           photo_url?: string | null
+          purchase_price?: number
           specs: Json
           specs_template_id?: number | null
           status?: Database["public"]["Enums"]["equipment_status_enum"]
@@ -309,7 +321,9 @@ export type Database = {
           build_volume_y?: number
           build_volume_z?: number
           created_at?: string
+          designs_used?: Json
           equipment_library_id?: number | null
+          hours_used?: number
           id?: number
           last_maintenance?: string | null
           manufacturer?: string | null
@@ -317,6 +331,7 @@ export type Database = {
           model?: string | null
           next_maintenance?: string | null
           photo_url?: string | null
+          purchase_price?: number
           specs?: Json
           specs_template_id?: number | null
           status?: Database["public"]["Enums"]["equipment_status_enum"]
@@ -446,6 +461,48 @@ export type Database = {
             columns: ["equipment_id"]
             isOneToOne: false
             referencedRelation: "equipment"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      equipment_usage: {
+        Row: {
+          equipment_id: number
+          id: number
+          order_id: number | null
+          revenue_generated: number
+          usage_date: string | null
+          usage_hours: number
+        }
+        Insert: {
+          equipment_id: number
+          id?: number
+          order_id?: number | null
+          revenue_generated?: number
+          usage_date?: string | null
+          usage_hours: number
+        }
+        Update: {
+          equipment_id?: number
+          id?: number
+          order_id?: number | null
+          revenue_generated?: number
+          usage_date?: string | null
+          usage_hours?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_equipment_usage_equipment"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_equipment_usage_order"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]

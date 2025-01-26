@@ -90,7 +90,7 @@ export default function Inventory() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Photo</TableHead>
+                        <TableHead className="w-[60px]"></TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead>Status</TableHead>
@@ -138,7 +138,15 @@ export default function Inventory() {
                     <Card key={material.id}>
                       <CardContent className="pt-6">
                         <div className="flex items-center gap-2">
-                          <Package className="h-5 w-5" />
+                          {material.image_url ? (
+                            <img
+                              src={material.image_url}
+                              alt={material.type || "Material"}
+                              className="h-10 w-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <Package className="h-5 w-5" />
+                          )}
                           <h3 className="font-semibold">{material.type}</h3>
                         </div>
                         <div className="mt-2 space-y-1">
