@@ -6,6 +6,7 @@ import { MaterialsGrid } from "@/components/inventory/MaterialsGrid";
 import { InventoryLayout } from "@/components/inventory/InventoryLayout";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { useInventoryData } from "@/hooks/use-inventory-data";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Equipment = Tables<"equipment">;
 
@@ -17,6 +18,21 @@ export default function Inventory() {
     return (
       <InventoryLayout>
         <ErrorMessage message={error} />
+      </InventoryLayout>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <InventoryLayout>
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <div className="space-y-2">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        </div>
       </InventoryLayout>
     );
   }
