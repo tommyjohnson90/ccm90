@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,15 +19,31 @@ export function EquipmentLibraryDialog({
   equipmentLibrary 
 }: EquipmentLibraryDialogProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredEquipment, setFilteredEquipment] = useState<EquipmentLibrary[]>(equipmentLibrary);
 
-  const filteredEquipment = equipmentLibrary.filter((item) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      item.type?.toLowerCase().includes(searchLower) ||
-      item.manufacturer?.toLowerCase().includes(searchLower) ||
-      item.model?.toLowerCase().includes(searchLower)
-    );
-  });
+  // Update filtered results whenever search query or equipment library changes
+  useEffect(() => {
+    const filtered = equipmentLibrary.filter((item) => {
+      const searchLower = searchQuery.toLowerCase().trim();
+      
+      // If search is empty, show all equipment
+      if (!searchLower) return true;
+      
+      // Check each searchable field, handling potential nulls
+      return (
+        (item.type?.toLowerCase() || '').includes(searchLower) ||
+        (item.manufacturer?.toLowerCase() || '').includes(searchLower) ||
+        (item.model?.toLowerCase() || '').includes(searchLower)
+      );
+    });
+    
+    setFilteredEquipment(filtered);
+  }, [searchQuery, equipmentLibrary]);
+
+  // Handle search input changes
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -40,7 +56,7 @@ export function EquipmentLibraryDialog({
           <Input
             placeholder="Search by type, manufacturer, or model..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             className="max-w-sm"
           />
           
@@ -56,21 +72,29 @@ export function EquipmentLibraryDialog({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredEquipment.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
-                        <Package className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{item.manufacturer}</TableCell>
-                    <TableCell>{item.model}</TableCell>
-                    <TableCell>{item.type}</TableCell>
-                    <TableCell>
-                      {item.features ? JSON.stringify(item.features).slice(0, 50) + '...' : 'N/A'}
+                {filteredEquipment.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-4">
+                      No equipment found matching your search
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  filteredEquipment.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+                          <Package className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">{item.manufacturer}</TableCell>
+                      <TableCell>{item.model}</TableCell>
+                      <TableCell>{item.type}</TableCell>
+                      <TableCell>
+                        {item.features ? JSON.stringify(item.features).slice(0, 50) + '...' : 'N/A'}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
