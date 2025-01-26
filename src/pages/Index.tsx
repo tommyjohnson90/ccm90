@@ -53,11 +53,9 @@ const Index = () => {
 
   const handleSignIn = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin
-        }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: 'test@example.com',
+        password: 'password123'
       });
       
       if (error) {
@@ -65,6 +63,11 @@ const Index = () => {
           title: "Error signing in",
           description: error.message,
           variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Successfully signed in",
         });
       }
     } catch (error) {
