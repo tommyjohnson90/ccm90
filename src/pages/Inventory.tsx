@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tables } from "@/integrations/supabase/types";
 import { EquipmentTable } from "@/components/inventory/EquipmentTable";
 import { MaterialsGrid } from "@/components/inventory/MaterialsGrid";
-import { EquipmentLibraryTable } from "@/components/inventory/EquipmentLibraryTable";
 import { InventoryLayout } from "@/components/inventory/InventoryLayout";
 import { ErrorMessage } from "@/components/ui/error-message";
 import { useInventoryData } from "@/hooks/use-inventory-data";
@@ -11,7 +10,7 @@ import { useInventoryData } from "@/hooks/use-inventory-data";
 type Equipment = Tables<"equipment">;
 
 export default function Inventory() {
-  const { equipment, equipmentLibrary, materials, units, isLoading, error } = useInventoryData();
+  const { equipment, materials, units, isLoading, error } = useInventoryData();
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
 
   if (error) {
@@ -29,7 +28,6 @@ export default function Inventory() {
       <Tabs defaultValue="equipment" className="w-full">
         <TabsList>
           <TabsTrigger value="equipment">Equipment</TabsTrigger>
-          <TabsTrigger value="equipment-library">Equipment Library</TabsTrigger>
           <TabsTrigger value="materials">Materials</TabsTrigger>
         </TabsList>
 
@@ -37,12 +35,6 @@ export default function Inventory() {
           <EquipmentTable 
             equipment={equipment}
             onViewEquipment={setSelectedEquipment}
-          />
-        </TabsContent>
-
-        <TabsContent value="equipment-library">
-          <EquipmentLibraryTable 
-            equipmentLibrary={equipmentLibrary}
           />
         </TabsContent>
 

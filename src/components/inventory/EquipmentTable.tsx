@@ -14,10 +14,10 @@ export function EquipmentTable({ equipment, onViewEquipment }: EquipmentTablePro
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Equipment</h2>
+        <h2 className="text-lg font-semibold">Your Equipment</h2>
         <Button variant="outline" size="sm" className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Add to Equipment Library
+          Equipment Library
         </Button>
       </div>
       <div className="rounded-md border">

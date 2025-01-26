@@ -268,6 +268,8 @@ export type Database = {
       }
       equipment: {
         Row: {
+          avg_hours_per_make: number
+          avg_revenue_per_make: number
           build_volume_unit: number
           build_volume_x: number
           build_volume_y: number
@@ -275,15 +277,18 @@ export type Database = {
           created_at: string
           designs_used: Json
           equipment_library_id: number | null
+          hours_sum: number
           hours_used: number
           id: number
           last_maintenance: string | null
+          makes_count: number
           manufacturer: string | null
           manufacturer_url: string | null
           model: string | null
           next_maintenance: string | null
           photo_url: string | null
           purchase_price: number
+          revenue_sum: number
           specs: Json
           specs_template_id: number | null
           status: Database["public"]["Enums"]["equipment_status_enum"]
@@ -292,6 +297,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          avg_hours_per_make?: number
+          avg_revenue_per_make?: number
           build_volume_unit: number
           build_volume_x: number
           build_volume_y: number
@@ -299,15 +306,18 @@ export type Database = {
           created_at?: string
           designs_used?: Json
           equipment_library_id?: number | null
+          hours_sum?: number
           hours_used?: number
           id?: number
           last_maintenance?: string | null
+          makes_count?: number
           manufacturer?: string | null
           manufacturer_url?: string | null
           model?: string | null
           next_maintenance?: string | null
           photo_url?: string | null
           purchase_price?: number
+          revenue_sum?: number
           specs: Json
           specs_template_id?: number | null
           status?: Database["public"]["Enums"]["equipment_status_enum"]
@@ -316,6 +326,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          avg_hours_per_make?: number
+          avg_revenue_per_make?: number
           build_volume_unit?: number
           build_volume_x?: number
           build_volume_y?: number
@@ -323,15 +335,18 @@ export type Database = {
           created_at?: string
           designs_used?: Json
           equipment_library_id?: number | null
+          hours_sum?: number
           hours_used?: number
           id?: number
           last_maintenance?: string | null
+          makes_count?: number
           manufacturer?: string | null
           manufacturer_url?: string | null
           model?: string | null
           next_maintenance?: string | null
           photo_url?: string | null
           purchase_price?: number
+          revenue_sum?: number
           specs?: Json
           specs_template_id?: number | null
           status?: Database["public"]["Enums"]["equipment_status_enum"]
@@ -366,33 +381,48 @@ export type Database = {
       equipment_library: {
         Row: {
           added_by: number | null
+          avg_hours_per_make: number
+          avg_revenue_per_make: number
           features: Json | null
+          hours_sum: number
           id: number
           last_updated: string | null
+          makes_count: number
           manufacturer: string | null
           model: string | null
+          revenue_sum: number
           specifications: Json | null
           supported_materials: Json | null
           type: string | null
         }
         Insert: {
           added_by?: number | null
+          avg_hours_per_make?: number
+          avg_revenue_per_make?: number
           features?: Json | null
+          hours_sum?: number
           id?: number
           last_updated?: string | null
+          makes_count?: number
           manufacturer?: string | null
           model?: string | null
+          revenue_sum?: number
           specifications?: Json | null
           supported_materials?: Json | null
           type?: string | null
         }
         Update: {
           added_by?: number | null
+          avg_hours_per_make?: number
+          avg_revenue_per_make?: number
           features?: Json | null
+          hours_sum?: number
           id?: number
           last_updated?: string | null
+          makes_count?: number
           manufacturer?: string | null
           model?: string | null
+          revenue_sum?: number
           specifications?: Json | null
           supported_materials?: Json | null
           type?: string | null
