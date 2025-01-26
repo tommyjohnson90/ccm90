@@ -6,6 +6,8 @@ import { UserCircle, Award } from "lucide-react";
 import { AdminAnalytics } from "@/components/AdminAnalytics";
 import { DesignerAnalytics } from "@/components/DesignerAnalytics";
 import { MakerAnalytics } from "@/components/MakerAnalytics";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const trendingDesigns = [
   {
@@ -43,10 +45,36 @@ const Index = () => {
   const isAdmin = userType === 'admin';
   const isDesigner = userType === 'designer';
   const isMaker = userType === 'maker';
+  const { toast } = useToast();
 
   // This would typically come from your auth system
   const userName = "John Doe"; // Placeholder name
   const communityPoints = 1250; // Placeholder points
+
+  const handleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      
+      if (error) {
+        toast({
+          title: "Error signing in",
+          description: error.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error signing in",
+        description: "An unexpected error occurred",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <SidebarProvider>
@@ -64,7 +92,7 @@ const Index = () => {
                 <Award className="h-5 w-5 text-amber-500" />
                 <span className="text-sm font-medium text-gray-700">{communityPoints} CP</span>
               </div>
-              <Button variant="ghost" className="flex items-center gap-2">
+              <Button variant="ghost" className="flex items-center gap-2" onClick={handleSignIn}>
                 Sign In
               </Button>
             </div>
